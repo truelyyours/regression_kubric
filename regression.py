@@ -36,8 +36,8 @@ def predict_price(area) -> float:
     data = numpy.array([price_train,area_train]).transpose()
 
     for i in range(epoch):
-    	c_dash = 0
-    	m_dash = 0
+    	c_dash = 0.0
+    	m_dash = 0.0
     	n = float(len(data))
     	for i in range(len(data)):
     		x = data[i,0]
@@ -45,14 +45,14 @@ def predict_price(area) -> float:
     		c_dash -= (2/n) * (y - (m * x + c))
     		m_dash -= (2/n) * x * (y - (m * x + c))
 
-    	c = c - learning_rate*c_dash
-    	m = m - learning_rate*m_dash
+    	c -= learning_rate*c_dash
+    	m -= learning_rate*m_dash
 
     price = []
     for area in area_test:
     	price.append(m*area + c)
 
-    return numpy.array(price)
+    return numpy.array(price)[:24]
 
 
 if __name__ == "__main__":
