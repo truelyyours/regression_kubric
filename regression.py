@@ -18,15 +18,17 @@ def predict_price(area) -> float:
     # Loading training data
     response = requests.get(TRAIN_DATA_URL)
     area_train,price_train = response.text.split()
-    area_train = list(map(float,area_train.split(',')[1:]))
-    price_train = list(map(float,price_train.split(',')[1:]))
+    area_train = numpy.array(list(map(float,area_train.split(',')[1:])))
+    area_train = area_train / numpy.linalg.norm(area_train)
+    price_train = numpy.array(list(map(float,price_train.split(',')[1:])))
+    price_train = price_train / numpy.linalg.norm(price_train)
 
     # Loading test data
     response = requests.get(TEST_DATA_URL)
     area_test,price_test = response.text.split()
     area_test = list(map(float,area_test.split(',')[1:]))
     price_test = list(map(float,price_test.split(',')[1:]))
-    learning_rate = 0.02
+    learning_rate = 0.005
 
     # actual code
     # y = mx + c
@@ -40,8 +42,8 @@ def predict_price(area) -> float:
     	m_dash = 0.0
     	n = float(len(data))
     	for i in range(len(data)):
-    		x = data[i,0]
-    		y = data[i,1]
+    		x = data[i,1]
+    		y = data[i,0]
     		c_dash -= (2/n) * (y - (m * x + c))
     		m_dash -= (2/n) * x * (y - (m * x + c))
 
@@ -51,7 +53,7 @@ def predict_price(area) -> float:
     price = []
     for area in area_test:
     	price.append(m*area + c)
-
+#     Need to return the validatoion values only.. It seems
     return numpy.array(price)[:24]
 
 
