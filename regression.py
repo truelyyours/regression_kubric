@@ -28,13 +28,13 @@ def predict_price(area) -> float:
     area_test,price_test = response.text.split()
     area_test = list(map(float,area_test.split(',')[1:]))
     price_test = list(map(float,price_test.split(',')[1:]))
-    learning_rate = 0.005
+    learning_rate = 0.0024
 
     # actual code
     # y = mx + c
     m = 0
     c = 0
-    epoch = 10000
+    epoch = 50000
     data = numpy.array([price_train,area_train]).transpose()
 
     for i in range(epoch):
@@ -51,10 +51,16 @@ def predict_price(area) -> float:
     	m -= learning_rate*m_dash
 
     price = []
+# comment below line and line on 57,58 this in case you need to validate on all the predicted prices.
+    from data import validation_data
     for area in area_test:
-    	price.append(m*area + c)
-#     Need to return the validatoion values only.. It seems
-    return numpy.array(price)[:24]
+	if area in validation_data:
+	    	price.append(m*area + c)
+# 	Uncomment below line if you need all the predicted data.
+# 	price.append(m*area + c)
+
+    print("slope= {}, intercept= {}".format(m,c))
+    return numpy.array(price)
 
 
 if __name__ == "__main__":
